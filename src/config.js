@@ -11,14 +11,17 @@ const availableApps = [
   {
     name: "people",
     path: "http://localhost:8236/people.js",
-    element: "people",
     link: "/people"
   },
   {
     name: "planets",
     path: "http://localhost:8237/planets.js",
-    element: "planets",
     link: "/planets"
+  },
+  {
+    name: "metalK8s",
+    path: "http://localhost:8240/metalK8s.js",
+    link: "/metalK8s"
   }
 ];
 

@@ -11,3 +11,7 @@ export function people(location) {
 export function planets(location) {
   return prefix(location, "planets");
 }
+
+export function metalK8s(location) {
+  return prefix(location, "metalK8s");
+}
