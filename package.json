@@ -32,8 +32,9 @@
   "author": "Justin McMurdie",
   "license": "ISC",
   "dependencies": {
+    "@reach/router": "1.2.1",
     "@fortawesome/fontawesome-free": "5.7.2",
-    "@scality/core-ui": "github:scality/core-ui.git#384dc3b",
+    "@scality/core-ui": "github:scality/core-ui.git#cdef38f",
     "polished": "3.4.1",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",

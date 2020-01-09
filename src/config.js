@@ -3,6 +3,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Navbar } from "@scality/core-ui";
 import * as isActive from "./activityFns.js";
+import { Link } from "@reach/router";
 
 //Auth with Dex
 
@@ -27,11 +28,12 @@ const availableApps = [
 
 const availableAppTabs = availableApps.map(app => {
   return {
-    onClick: () => {
-      window.open(app.link, "_self");
-    },
-    selected: location.href.indexOf(app.name) !== -1,
-    title: app.name
+    link: (
+      <Link key={app.link} to={app.link}>
+        {app.name}
+      </Link>
+    ),
+    selected: location.href.indexOf(app.name) !== -1
   };
 });
 
