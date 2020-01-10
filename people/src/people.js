@@ -34,7 +34,12 @@ function domElementGetter() {
   if (!el) {
     el = document.createElement("div");
     el.id = "people";
-    document.body.appendChild(el);
+    const contentDiv = document.getElementById("content");
+    if (contentDiv) {
+      contentDiv.appendChild(el);
+    } else {
+      document.body.appendChild(el);
+    }
   }
 
   return el;

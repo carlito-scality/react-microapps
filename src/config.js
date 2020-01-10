@@ -3,7 +3,20 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Navbar } from "@scality/core-ui";
 import * as isActive from "./activityFns.js";
-import { Link } from "@reach/router";
+import { Router, Link } from "react-router-dom";
+import history from "./history";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware, compose } from "redux";
+import reducer from "./reducer";
+import { useRouteMatch, useHistory } from "react-router";
+import { useSelector, useDispatch } from "react-redux";
+
+const composeEnhancers =
+  typeof window === "object" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
+    : compose;
+const enhancer = composeEnhancers();
+export const store = createStore(reducer, enhancer);
 
 //Auth with Dex
 
@@ -26,17 +39,6 @@ const availableApps = [
   }
 ];
 
-const availableAppTabs = availableApps.map(app => {
-  return {
-    link: (
-      <Link key={app.link} to={app.link}>
-        {app.name}
-      </Link>
-    ),
-    selected: location.href.indexOf(app.name) !== -1
-  };
-});
-
 const rightActions = [
   {
     type: "dropdown",
@@ -53,13 +55,43 @@ const rightActions = [
   }
 ];
 
+const App = props => {
+  const history = useHistory();
+  const shell = useSelector(state => state.shell);
+  const availableAppTabs = availableApps.map(app => {
+    return {
+      link: (
+        <Link key={app.link} to={app.link}>
+          {app.name}
+        </Link>
+      ),
+      selected: useRouteMatch({
+        path: app.link,
+        exact: false,
+        strict: true
+      })
+    };
+  });
+
+  return (
+    <>
+      <Navbar
+        productName="Scality"
+        rightActions={rightActions}
+        tabs={availableAppTabs}
+      />
+      <div id="content"></div>
+    </>
+  );
+};
 ReactDOM.render(
-  <Navbar
-    productName="Scality"
-    rightActions={rightActions}
-    tabs={availableAppTabs}
-  />,
-  document.getElementById("navbar")
+  <Provider store={store}>
+    <Router history={history}>
+      <App />
+    </Router>
+  </Provider>,
+
+  document.getElementById("root")
 );
 
 availableApps.forEach(app =>
