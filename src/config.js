@@ -98,7 +98,8 @@ availableApps.forEach(app =>
   singleSpa.registerApplication(
     app.name,
     () => SystemJS.import(app.path),
-    isActive[app.name]
+    isActive[app.name],
+    { store }
   )
 );
 

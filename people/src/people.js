@@ -23,7 +23,9 @@ export const bootstrap = [
   reactLifecycles.bootstrap
 ];
 
-export const mount = [reactLifecycles.mount];
+export function mount(props) {
+  return reactLifecycles.mount(props);
+}
 
 export const unmount = [reactLifecycles.unmount];
 
