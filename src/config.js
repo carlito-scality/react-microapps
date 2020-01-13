@@ -7,7 +7,7 @@ import { Router, Link } from "react-router-dom";
 import history from "./history";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose } from "redux";
-import reducer from "./reducer";
+import configureStore from "./reducer";
 import { useRouteMatch, useHistory } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -16,7 +16,7 @@ const composeEnhancers =
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
     : compose;
 const enhancer = composeEnhancers();
-export const store = createStore(reducer, enhancer);
+export const store = configureStore(enhancer);
 
 //Auth with Dex
 

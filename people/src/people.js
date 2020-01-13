@@ -4,6 +4,7 @@ import singleSpaReact from "single-spa-react";
 import { property } from "lodash";
 import setPublicPath from "./set-public-path.js";
 import root from "./root.component.js";
+import peopleReducer from "./people.reducer";
 
 const reactLifecycles = singleSpaReact({
   React,
@@ -16,12 +17,11 @@ const reactLifecycles = singleSpaReact({
   domElementGetter
 });
 
-export const bootstrap = [
-  /*() => {
-    return setPublicPath()
-  },*/
-  reactLifecycles.bootstrap
-];
+export function bootstrap(props) {
+  const store = props.store;
+  store.injectReducer("people", peopleReducer); //inject Reducer dynamically
+  return reactLifecycles.bootstrap(props);
+}
 
 export function mount(props) {
   return reactLifecycles.mount(props);

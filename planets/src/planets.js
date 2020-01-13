@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import singleSpaReact from "single-spa-react";
 import root from "./root.component.js";
+import planetsReducer from "./planets.reducer";
 
 const reactLifecycles = singleSpaReact({
   React,
@@ -10,7 +11,11 @@ const reactLifecycles = singleSpaReact({
   domElementGetter
 });
 
-export const bootstrap = [reactLifecycles.bootstrap];
+export function bootstrap(props) {
+  const store = props.store;
+  store.injectReducer("planets", planetsReducer); //inject Reducer dynamically
+  return reactLifecycles.bootstrap(props);
+}
 
 export const mount = [reactLifecycles.mount];
 
