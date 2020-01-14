@@ -39,25 +39,25 @@ const availableApps = [
   }
 ];
 
-const rightActions = [
-  {
-    type: "dropdown",
-    text: "Carlito",
-    icon: <i className="fas fa-user" />,
-    items: [
-      {
-        label: "Log out",
-        onClick: event => {
-          console.log(event);
-        }
-      }
-    ]
-  }
-];
-
 const App = props => {
   const history = useHistory();
-  const shell = useSelector(state => state.shell);
+  const user = useSelector(state => state.shell.user);
+  const rightActions = [
+    {
+      type: "dropdown",
+      text: user,
+      icon: <i className="fas fa-user" />,
+      items: [
+        {
+          label: "Log out",
+          onClick: event => {
+            console.log(event);
+          }
+        }
+      ]
+    }
+  ];
+
   const availableAppTabs = availableApps.map(app => {
     return {
       link: (

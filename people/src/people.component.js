@@ -18,12 +18,24 @@ const People = props => {
   }, []);
 
   const people = useSelector(state => state.people.list);
+  const user = useSelector(state => state.shell.user);
+  const planets = useSelector(state => state.planets);
   return (
-    <PeopleList
-      people={people}
-      loadingPeople={false}
-      selectPerson={people[0]}
-    />
+    <>
+      <div style={{ padding: "10px 30px" }}>
+        <label>Hello {user}</label>
+      </div>
+      {planets && (
+        <div style={{ padding: "10px 30px" }}>
+          <label>Planets: {planets.list.length}</label>
+        </div>
+      )}
+      <PeopleList
+        people={people}
+        loadingPeople={false}
+        selectPerson={people[0]}
+      />
+    </>
   );
 };
 

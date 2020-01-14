@@ -1,5 +1,6 @@
 const defaultState = {
-  config: "Shell"
+  config: "Shell",
+  user: "Carlito"
 };
 export default function reducer(state = defaultState, action = {}) {
   switch (action.type) {
