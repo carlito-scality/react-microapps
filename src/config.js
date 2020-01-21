@@ -1,5 +1,5 @@
 import * as singleSpa from "single-spa";
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Navbar } from "@scality/core-ui";
 import * as isActive from "./activityFns.js";
@@ -31,13 +31,43 @@ const availableApps = [
     name: "planets",
     path: "http://localhost:8237/planets.js",
     link: "/planets"
-  },
-  {
-    name: "metalK8s",
-    path: "http://localhost:8240/metalK8s.js",
-    link: "/metalK8s"
   }
 ];
+
+const metalK8s = {
+  name: "metalK8s",
+  path: "",
+  link: "/metalK8s",
+  url: "http://localhost:8240"
+};
+//Fetch MetalK8s manifest.json
+fetch(`${metalK8s.url}/manifest.json`)
+  .then(response => response.json())
+  .then(json => {
+    metalK8s.path = `${metalK8s.url}/${json["metalK8s.js"]}`;
+    availableApps.push(metalK8s);
+
+    ReactDOM.render(
+      <Provider store={store}>
+        <Router history={history}>
+          <App availableApps={availableApps} />
+        </Router>
+      </Provider>,
+
+      document.getElementById("root")
+    );
+
+    availableApps.forEach(app =>
+      singleSpa.registerApplication(
+        app.name,
+        () => SystemJS.import(app.path),
+        isActive[app.name],
+        { store }
+      )
+    );
+
+    singleSpa.start();
+  });
 
 const App = props => {
   const history = useHistory();
@@ -58,7 +88,7 @@ const App = props => {
     }
   ];
 
-  const availableAppTabs = availableApps.map(app => {
+  const availableAppTabs = props.availableApps.map(app => {
     return {
       link: (
         <Link key={app.link} to={app.link}>
@@ -84,23 +114,3 @@ const App = props => {
     </>
   );
 };
-ReactDOM.render(
-  <Provider store={store}>
-    <Router history={history}>
-      <App />
-    </Router>
-  </Provider>,
-
-  document.getElementById("root")
-);
-
-availableApps.forEach(app =>
-  singleSpa.registerApplication(
-    app.name,
-    () => SystemJS.import(app.path),
-    isActive[app.name],
-    { store }
-  )
-);
-
-singleSpa.start();
