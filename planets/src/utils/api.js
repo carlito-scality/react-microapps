@@ -1,30 +1,21 @@
-import fetchWithCache from '@portal/fetchWithCache'
-import { combineLatest } from 'rxjs'
+import fetchWithCache from "../../../fetchWithCache/src/fetchWithCache";
+import { combineLatest } from "rxjs";
 
 export function getPlanets(pageNum = 1) {
-  return fetchWithCache(
-    `planets?page=${pageNum}`
-  )
+  return fetchWithCache(`planets?page=${pageNum}`);
 }
 
 export function getPlanet(id) {
-  return fetchWithCache(
-    `planets/${id}/`
-  )
+  return fetchWithCache(`planets/${id}/`);
 }
 
 export function getPerson(peronNumber) {
-  return fetchWithCache(
-    `people/${peronNumber}/`
-  )
+  return fetchWithCache(`people/${peronNumber}/`);
 }
 
 export function getPeopleByIds(people = []) {
   const peopleObsArray = people.map(person => {
-    return fetchWithCache(
-      `people/${person}/`
-    )
-  })
-  return combineLatest(peopleObsArray)
-
+    return fetchWithCache(`people/${person}/`);
+  });
+  return combineLatest(peopleObsArray);
 }

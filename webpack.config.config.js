@@ -3,14 +3,18 @@ const webpack = require("webpack");
 const path = require("path");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const URLImportPlugin = require("webpack-external-import/webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const WriteFilePlugin = require("write-file-webpack-plugin");
 
 module.exports = {
-  entry: "./src/config.js",
+  entry: {
+    shell: path.resolve(__dirname, "./src/config.js")
+  },
   output: {
-    filename: "config.js",
-    library: "config",
-    libraryTarget: "amd",
-    path: path.resolve(__dirname, "build")
+    filename: "js/[name].[hash].js",
+    path: path.resolve(__dirname, "build"),
+    chunkFilename: "js/[name].[chunkhash].js"
   },
   mode: "production",
   module: {
@@ -20,6 +24,12 @@ module.exports = {
         test: /\.js?$/,
         exclude: [path.resolve(__dirname, "node_modules")],
         loader: "babel-loader"
+      },
+      {
+        test: /\.(html)$/,
+        use: {
+          loader: "html-loader"
+        }
       },
       {
         test: /\.css$/,
@@ -60,12 +70,31 @@ module.exports = {
     modules: [__dirname, "node_modules"]
   },
   plugins: [
-    CopyWebpackPlugin([
-      { from: path.resolve(__dirname, "src/index.html") },
-      { from: path.resolve(__dirname, "src/styles.css") }
-    ]),
-    new CleanWebpackPlugin(["build"])
+    new WriteFilePlugin(),
+    new URLImportPlugin({
+      manifestName: "shell",
+      fileName: "importManifest.js",
+      basePath: ``,
+      transformExtensions: /^(gz|map)$/i,
+      writeToFileEmit: false,
+      seed: null,
+      filter: null,
+      debug: true,
+      map: null,
+      generate: null
+    }),
+    new HtmlWebpackPlugin({
+      template: "./src/index.html",
+      inject: true
+    })
   ],
-  devtool: "source-map",
-  externals: [/^lodash$/, /^single-spa$/, /^rxjs\/?.*$/]
+  devtool: "inline-source-map",
+  node: {
+    fs: "empty"
+  },
+  optimization: {
+    runtimeChunk: {
+      name: "webpackRuntime"
+    }
+  }
 };

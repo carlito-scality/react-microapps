@@ -1,23 +1,17 @@
-import fetchWithCache from '@portal/fetchWithCache'
+import fetchWithCache from "../../../fetchWithCache/src/fetchWithCache";
 
 export function getPeople(pageNum = 1) {
-  return fetchWithCache(`people/?page=${pageNum}`)
+  return fetchWithCache(`people/?page=${pageNum}`);
 }
 
 export function getPlanet(id) {
-  return fetchWithCache(
-    `planets/${id}/`
-  )
+  return fetchWithCache(`planets/${id}/`);
 }
 
 export function getFilm(filmId) {
-  return fetchWithCache(
-    `films/${filmId}`
-  )
+  return fetchWithCache(`films/${filmId}`);
 }
 
 export function getFilms() {
-  return fetchWithCache(
-    `films`
-  )
+  return fetchWithCache(`films`);
 }

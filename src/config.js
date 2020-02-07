@@ -1,15 +1,16 @@
-import * as singleSpa from "single-spa";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { Navbar } from "@scality/core-ui";
 import * as isActive from "./activityFns.js";
-import { Router, Link } from "react-router-dom";
+import { Router, Link, Route, Switch } from "react-router-dom";
 import history from "./history";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose } from "redux";
 import configureStore from "./reducer";
 import { useRouteMatch, useHistory } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
+
+import { ExternalComponent, corsImport } from "webpack-external-import";
 
 const composeEnhancers =
   typeof window === "object" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
@@ -24,54 +25,51 @@ export const store = configureStore(enhancer);
 const availableApps = [
   {
     name: "people",
-    path: "http://localhost:8236/people.js",
-    link: "/people"
+    link: "/people",
+    url: "http://localhost:8236"
   },
   {
     name: "planets",
-    path: "http://localhost:8237/planets.js",
-    link: "/planets"
+    link: "/planets",
+    url: "http://localhost:8237"
+  },
+  {
+    name: "metalk8s",
+    link: "/metalk8s",
+    url: "http://localhost:8240"
   }
 ];
 
-const metalK8s = {
-  name: "metalK8s",
-  path: "",
-  link: "/metalK8s",
-  url: "http://localhost:8240"
+Promise.all(
+  availableApps.map(app =>
+    corsImport(`${app.url}/importManifest.js?${Date.now()}`)
+  )
+).then(() => {
+  ReactDOM.render(
+    <Provider store={store}>
+      <Router history={history}>
+        <App availableApps={availableApps}></App>
+      </Router>
+    </Provider>,
+    document.getElementById("root")
+  );
+});
+
+const Microapp = props => {
+  return (
+    <ExternalComponent
+      interleave={__webpack_require__.interleaved(
+        `${props.app.name}/Root${props.app.name}`
+      )}
+    />
+  );
 };
-//Fetch MetalK8s manifest.json
-fetch(`${metalK8s.url}/manifest.json`)
-  .then(response => response.json())
-  .then(json => {
-    metalK8s.path = `${metalK8s.url}/${json["metalK8s.js"]}`;
-    availableApps.push(metalK8s);
-
-    ReactDOM.render(
-      <Provider store={store}>
-        <Router history={history}>
-          <App availableApps={availableApps} />
-        </Router>
-      </Provider>,
-
-      document.getElementById("root")
-    );
-
-    availableApps.forEach(app =>
-      singleSpa.registerApplication(
-        app.name,
-        () => SystemJS.import(app.path),
-        isActive[app.name],
-        { store }
-      )
-    );
-
-    singleSpa.start();
-  });
 
 const App = props => {
   const history = useHistory();
   const user = useSelector(state => state.shell.user);
+  const [routes, setRoutes] = useState([]);
+
   const rightActions = [
     {
       type: "dropdown",
@@ -102,7 +100,6 @@ const App = props => {
       })
     };
   });
-
   return (
     <>
       <Navbar
@@ -110,7 +107,23 @@ const App = props => {
         rightActions={rightActions}
         tabs={availableAppTabs}
       />
-      <div id="content"></div>
+      <div id="content">
+        <div>
+          <ExternalComponent
+            interleave={__webpack_require__.interleaved("metalk8s/Toto")}
+          />
+        </div>
+
+        <Switch>
+          {availableApps.map(app => (
+            <Route
+              exact
+              path={app.link}
+              component={() => <Microapp app={app} />}
+            />
+          ))}
+        </Switch>
+      </div>
     </>
   );
 };
