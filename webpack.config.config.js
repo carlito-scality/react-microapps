@@ -75,6 +75,7 @@ module.exports = {
       manifestName: "shell",
       fileName: "importManifest.js",
       basePath: ``,
+      publicPath: `//localhost:8233/`,
       transformExtensions: /^(gz|map)$/i,
       writeToFileEmit: false,
       seed: null,

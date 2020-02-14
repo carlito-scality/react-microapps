@@ -7,34 +7,21 @@ import { updatePeopleAction } from "./people.reducer";
 const People = props => {
   const dispatch = useDispatch();
   useEffect(() => {
-    getPeople(1).subscribe(
-      results => {
-        dispatch(updatePeopleAction(results.results));
-      },
-      err => {
-        console.log("err", err);
-      }
+    dispatch(
+      updatePeopleAction([{ name: "Toto" }, { name: "Titi" }, { name: "Tata" }])
     );
   }, []);
 
-  const people = useSelector(state => state.people.list);
   const user = useSelector(state => state.shell.user);
-  const planets = useSelector(state => state.planets);
+  const list = useSelector(state => (state.people && state.people.list) || []);
   return (
     <>
-      <div style={{ padding: "10px 30px" }}>
-        <label>Hello {user}</label>
-      </div>
-      {planets && (
-        <div style={{ padding: "10px 30px" }}>
-          <label>Planets: {planets.list.length}</label>
-        </div>
-      )}
-      <PeopleList
-        people={people}
-        loadingPeople={false}
-        selectPerson={people[0]}
-      />
+      <span>Hi {user}, Here is a people list</span>
+      <ul>
+        {list.map((p, i) => (
+          <li key={`item${i}`}>{p.name}</li>
+        ))}
+      </ul>
     </>
   );
 };

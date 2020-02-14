@@ -1,23 +1,23 @@
-const webpack = require('webpack');
+const webpack = require("webpack");
 
 module.exports = commonPaths => ({
-  mode: 'development',
-  devtool: 'inline-source-map',
-  entry: commonPaths.entry,
+  mode: "development",
+  devtool: "inline-source-map",
+  entry: { people: commonPaths.entry },
   output: {
-    filename: '[name].js',
+    filename: "[name].js",
     path: commonPaths.outputPath,
-    chunkFilename: '[name].[contenthash].js',
+    chunkFilename: "[name].[contenthash].js"
   },
   optimization: {
     namedModules: true,
     namedChunks: true,
     runtimeChunk: {
-      name: 'webpackRuntime',
+      name: "webpackRuntime"
     },
     splitChunks: {
-      chunks: 'all',
-    },
+      chunks: "all"
+    }
   },
   devServer: {
     contentBase: commonPaths.outputPath,
@@ -25,9 +25,9 @@ module.exports = commonPaths => ({
     hot: true,
     port: `${commonPaths.port}`,
     headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': '*',
-    },
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "*"
+    }
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()],
+  plugins: [new webpack.HotModuleReplacementPlugin()]
 });

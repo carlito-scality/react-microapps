@@ -48,7 +48,7 @@ Promise.all(
   ReactDOM.render(
     <Provider store={store}>
       <Router history={history}>
-        <App availableApps={availableApps}></App>
+        <App availableApps={availableApps} store={store}></App>
       </Router>
     </Provider>,
     document.getElementById("root")
@@ -61,6 +61,7 @@ const Microapp = props => {
       interleave={__webpack_require__.interleaved(
         `${props.app.name}/Root${props.app.name}`
       )}
+      store={props.store}
     />
   );
 };
@@ -119,7 +120,7 @@ const App = props => {
             <Route
               exact
               path={app.link}
-              component={() => <Microapp app={app} />}
+              component={() => <Microapp app={app} store={props.store} />}
             />
           ))}
         </Switch>
