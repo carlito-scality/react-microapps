@@ -14,7 +14,8 @@ module.exports = {
   output: {
     filename: "js/[name].[hash].js",
     path: path.resolve(__dirname, "build"),
-    chunkFilename: "js/[name].[chunkhash].js"
+    chunkFilename: "js/[name].[chunkhash].js",
+    publicPath: "http://localhost:8233/"
   },
   mode: "production",
   module: {
@@ -74,8 +75,8 @@ module.exports = {
     new URLImportPlugin({
       manifestName: "shell",
       fileName: "importManifest.js",
-      basePath: ``,
-      publicPath: `//localhost:8233/`,
+      basePath: "",
+      publicPath: "//localhost:8233/",
       transformExtensions: /^(gz|map)$/i,
       writeToFileEmit: false,
       seed: null,
